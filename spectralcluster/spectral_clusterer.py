@@ -17,7 +17,9 @@ class SpectralClusterer(base_spectral_clusterer.BaseSpectralClusterer):
                stop_eigenvalue=1e-2,
                row_wise_renorm=False,
                custom_dist="cosine",
-               max_iter=300):
+               max_iter=300,
+               output_centers=False,
+              ):
     """Constructor of the clusterer.
 
     Args:
@@ -41,7 +43,8 @@ class SpectralClusterer(base_spectral_clusterer.BaseSpectralClusterer):
         string, "cosine", "euclidean", "mahalanobis", or any other distance
         functions defined in scipy.spatial.distance can be used
       max_iter: the maximum number of iterations for the custom k-means
-    """
+      output_centers: should the centers of clusters be returned?
+    ."""
     super().__init__(
         min_clusters=min_clusters,
         max_clusters=max_clusters,
@@ -111,9 +114,10 @@ class SpectralClusterer(base_spectral_clusterer.BaseSpectralClusterer):
           rows_norm, (spectral_embeddings.shape[0], 1))
 
     # Run K-means on spectral embeddings.
-    labels = custom_distance_kmeans.run_kmeans(
+    return custom_distance_kmeans.run_kmeans(
         spectral_embeddings,
         n_clusters=k,
         custom_dist=self.custom_dist,
-        max_iter=self.max_iter)
-    return labels
+        max_iter=self.max_iter,
+        output_centers=output_centers,
+    )
