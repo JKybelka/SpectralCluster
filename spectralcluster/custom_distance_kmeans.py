@@ -8,7 +8,7 @@ from scipy.spatial import distance
 from sklearn.cluster import KMeans
 
 
-def run_kmeans(spectral_embeddings, n_clusters, custom_dist, max_iter):
+def run_kmeans(spectral_embeddings, n_clusters, custom_dist, max_iter, output_centers=False):
   """Run CustomKMeans with a custom distance measure support.
 
   Perform a custom kmeans clustering with any distance measure defined
@@ -21,7 +21,7 @@ def run_kmeans(spectral_embeddings, n_clusters, custom_dist, max_iter):
       string, "cosine", "euclidean", "mahalanobis", or any other distance
       functions defined in scipy.spatial.distance can be used
     max_iter: the maximum number of iterations for the custom k-means
-
+    output_centers: bool should cluster centers be returned (default=False)
   Returns:
     labels: predicted clustering labels of all samples
   """
@@ -42,7 +42,10 @@ def run_kmeans(spectral_embeddings, n_clusters, custom_dist, max_iter):
         custom_dist=custom_dist)
 
   labels = kmeans_clusterer.predict(spectral_embeddings)
-  return labels
+  if output_centers:
+    return labels, kmeans_clusterer.cluster_centers_ 
+  else:
+    return labels
 
 
 class CustomKMeans(object):
@@ -139,4 +142,6 @@ class CustomKMeans(object):
         if each_centroid_samples.any():
           self.centroids[each_centroid_idx] = np.mean(
               embeddings[each_centroid_samples], axis=0)
+          
+    self.cluster_centers_ = self.centroids   # add for compatibility with sklearn KMeans
     return labels
