@@ -17,8 +17,7 @@ class SpectralClusterer(base_spectral_clusterer.BaseSpectralClusterer):
                stop_eigenvalue=1e-2,
                row_wise_renorm=False,
                custom_dist="cosine",
-               max_iter=300,
-               output_centers=False,
+               max_iter=300
               ):
     """Constructor of the clusterer.
 
@@ -43,7 +42,6 @@ class SpectralClusterer(base_spectral_clusterer.BaseSpectralClusterer):
         string, "cosine", "euclidean", "mahalanobis", or any other distance
         functions defined in scipy.spatial.distance can be used
       max_iter: the maximum number of iterations for the custom k-means
-      output_centers: should the centers of clusters be returned?
     ."""
     super().__init__(
         min_clusters=min_clusters,
@@ -55,14 +53,14 @@ class SpectralClusterer(base_spectral_clusterer.BaseSpectralClusterer):
         custom_dist=custom_dist,
         max_iter=max_iter)
 
-  def predict(self, embeddings):
+  def predict(self, embeddings, output_centers=False):
     """Perform spectral clustering on data embeddings.
 
     The spectral clustering is performed on an affinity matrix.
 
     Args:
       embeddings: numpy array of shape (n_samples, n_features)
-
+      output_centers: bool whether the centroids should be returned
     Returns:
       labels: numpy array of shape (n_samples,)
 
